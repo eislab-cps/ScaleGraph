@@ -1,9 +1,8 @@
-# TODO:
-# - init_production and init_simulation currently expect different options
-#   (or rather expect options in different shapes). The two cases should be
-#   unified so that there is less special-casing.
-# - Always take names from the outside as options and fall back on defaults.
 defmodule ScaleGraph.NodeSupervisor do
+  @moduledoc """
+  The main module representing a ScaleGraph node. Creates a supervision tree
+  with all process that make up a node.
+  """
   use Supervisor
 
   def start_link(opts) do
@@ -22,7 +21,6 @@ defmodule ScaleGraph.NodeSupervisor do
     {keys, opts} = Keyword.pop!(opts, :keys)
     {addr, opts} = Keyword.pop!(opts, :addr)
     {shard_size, opts} = Keyword.pop!(opts, :shard_size)
-    # TODO: Why needs id_bits ??
 
     # Get some options that may fall back on defaults.
     {id, opts} = Keyword.pop(opts, :id)  # TODO: get from keys if missing

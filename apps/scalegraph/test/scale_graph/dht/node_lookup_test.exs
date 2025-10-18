@@ -161,7 +161,7 @@ defmodule ScaleGraph.DHT.NodeLookupTest do
     end)
     #
     spawn(fn ->
-      result = NodeLookup.lookup(rpc: rpc1, target: 2345, candidates: candidates, alpha: 2, n_lookup: 3, timeout: 100, id: 1234)
+      result = NodeLookup.lookup(rpc: rpc1, target: 2345, candidates: candidates, alpha: 2, n_lookup: 3, probe_timeout: 100, id: 1234)
       assert length(result.result) == 1
       send(parent, "done 1")
     end)
@@ -207,7 +207,7 @@ defmodule ScaleGraph.DHT.NodeLookupTest do
     end)
     #
     spawn(fn ->
-      result = NodeLookup.lookup(rpc: rpc1, target: 2345, candidates: candidates, alpha: 2, n_lookup: 3, timeout: 100, id: 1234)
+      result = NodeLookup.lookup(rpc: rpc1, target: 2345, candidates: candidates, alpha: 2, n_lookup: 3, probe_timeout: 100, id: 1234)
       assert length(result) == 2
       assert MapSet.new(result) == MapSet.new([{1235, addr2}, {1236, addr3}])
       send(parent, "done 1")

@@ -111,8 +111,8 @@ defmodule ScaleGraph.DHT do
       |> Keyword.put_new(:rpc, rpc)
       |> Keyword.put_new(:n_lookup, shard_size)
       |> Keyword.put_new(:max_pool, shard_size)
-    # FIXME: If alpha is given, we need to give it to lookup!
-    # What about timeout?
+      |> Keyword.put_new(:alpha, opts[:alpha])
+      |> Keyword.put_new(:probe_timeout, opts[:probe_timeout])
     state = %__MODULE__{
       id: id,
       rpc: rpc,

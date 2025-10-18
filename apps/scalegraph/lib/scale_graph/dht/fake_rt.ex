@@ -13,8 +13,6 @@ defmodule ScaleGraph.DHT.FakeRT do
 
   defstruct [
     # Don't need an ID in this RT because there are no buckets.
-    #id: nil,
-    id_bits: nil,
     bucket_size: nil,
     contacts: %{},
   ]
@@ -56,8 +54,6 @@ defmodule ScaleGraph.DHT.FakeRT do
   @impl GenServer
   def init(opts) do
     state = %__MODULE__{
-      #id: opts[:id],
-      id_bits: opts[:id_bits],
       bucket_size: opts[:bucket_size],
     }
     {:ok, state}

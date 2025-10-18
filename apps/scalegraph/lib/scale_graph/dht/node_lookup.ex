@@ -2,10 +2,7 @@
 # TODO:
 # - Consider allowing a soft timeout to be set and launch a new probe when this
 #   timeout is triggered.
-# - Might lookup to not just return the closest found nodes, but also some
-#   stats, such as how many probes were sent etc.
 # - Allow sort/probe order to be specified.
-# - Don't probe self!
 #
 # NOTE: NodeLookup knows nothing about the RT. It just takes an initial pool of
 # candidates and finds new ones by making RPCs.
@@ -36,6 +33,7 @@ defmodule ScaleGraph.DHT.NodeLookup do
   Optional:
   - `:alpha` - the number of parallel requests (2 by default).
   - `:max_pool` - maximum candidate pool size (`:n_lookup` by default).
+  - `:probe_timeout` - how long (in ms) to wait for a response (500 by default).
   """
   def lookup(opts) do
     {:ok, pid} = GenServer.start_link(__MODULE__, opts, opts)
@@ -44,9 +42,6 @@ defmodule ScaleGraph.DHT.NodeLookup do
 
   @impl GenServer
   def init(opts) do
-    if opts[:timeout] == nil do
-      Logger.warning("Lookup without timeout!")
-    end
     state = %{
       id: Keyword.fetch!(opts, :id),
       rpc: Keyword.fetch!(opts, :rpc),
@@ -55,7 +50,7 @@ defmodule ScaleGraph.DHT.NodeLookup do
       n_lookup: Keyword.fetch!(opts, :n_lookup),
       alpha: opts[:alpha] || 2,
       max_pool: opts[:max_pool] || opts[:n_lookup],
-      timeout: opts[:timeout],  # TODO: really use no default !?
+      timeout: Keyword.get(opts, :probe_timeout, 500),
       probed: MapSet.new(),
       alive: MapSet.new(),
       inflight: 0,

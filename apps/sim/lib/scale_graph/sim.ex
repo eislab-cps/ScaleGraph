@@ -141,7 +141,6 @@ defmodule ScaleGraph.Sim do
           rt: rt_name,
           rt_mod: ScaleGraph.DHT.FakeRT,
           shard_size: shard_size,
-          # XXX: relying on default lookup opts
           name: dht_name,
         ]
         node_sup_opts = [
