@@ -73,13 +73,6 @@ defmodule ScaleGraph.Consensus do
     GenServer.cast(consensus, {:receiver_lock_response, src, dst, result})
   end
 
-  @doc """
-  **Deprecated.**
-  """
-  def request_receiver_lock(consensus, account1=src, {{id2, addr2}, account2}=dst, tx) do
-    GenServer.call(consensus, {:receiver_lock_sync, src, dst, tx})  # sync
-  end
-
   @doc "Send a propose message."
   def propose(consensus, account1=src, {{id2, addr2}, account2}=dst, prop) do
     #msg = ScaleGraph.Consensus.Msg.proposal(src, dst, prop)
@@ -257,12 +250,11 @@ defmodule ScaleGraph.Consensus do
     case state.instances[account] do
       nil ->
         # FIXME: instantiate instance via DynamicSupervisor!
-        #{:ok, ledger} = Ledgers.ledger(state.ledgers, account)
         ledger =
           case Ledgers.ledger(state.ledgers, account) do
             {:ok, ledger} ->
               ledger
-            _ ->
+            _else ->
               raise "Consensus #{abbrev(node_id)}: failed to look up instance #{abbrev(account)}"
           end
         opts = [
@@ -290,22 +282,22 @@ defmodule ScaleGraph.Consensus.Msg do
   # There is also no need to encode the IP:port into the message sent over the network.
   # It will be in the UDP (or TCP) header anyway.
 
-  def proposal({{id1, addr1}, account1}=src, {{id2, addr2}, account2}=dst, prop) do
+  def proposal(src, dst, prop) do
     {:consensus, {:propose, src, dst, prop}} # TODO: Signature!
   end
 
-  def vote({{id1, addr1}, account1}=src, {{id2, addr2}, account2}=dst, prop_hash) do
+  def vote(src, dst, prop_hash) do
     {:consensus, {:vote, src, dst, prop_hash}} # TODO: Signature!
   end
 
-  def commit({{id1, addr1}, account1}=src, {{id2, addr2}, account2}=dst, prop_hash) do
+  def commit(src, dst, prop_hash) do
     {:consensus, {:commit, src, dst, prop_hash}} # TODO: Signature!
   end
 
   @doc """
   Request information about the last block in the receiver's chain.
   """
-  def req_last_block({{id1, addr1}, account1}=src, {{id2, addr2}, account2}=dst) do
+  def req_last_block(src, dst) do
     {:consensus, {:req_last_block, src, dst, nil}} # TODO: Signature!
   end
 
@@ -313,7 +305,7 @@ defmodule ScaleGraph.Consensus.Msg do
   Reply to a request for last block info.
   Return information about the last block in the receiver's chain.
   """
-  def ret_last_block({{id1, addr1}, account1}=src, {{id2, addr2}, account2}=dst, data) do
+  def ret_last_block(src, dst, data) do
     {:consensus, {:ret_last_block, src, dst, data}} # TODO: Signature!
   end
 
@@ -323,7 +315,7 @@ defmodule ScaleGraph.Consensus.Msg do
   if not locked on any value. Otherwise, `lock` has to be a tuple with
   the locked proposal and a lock certificate.
   """
-  def view_change({{id1, addr1}, account1}=src, {{id2, addr2}, account2}=dst, {new_view, lock}=data) do
+  def view_change(src, dst, data) do
     {:consensus, {:view_change, src, dst, data}} # TODO: Signature!
   end
 
@@ -331,21 +323,21 @@ defmodule ScaleGraph.Consensus.Msg do
   @doc """
   Send a new-view message.
   """
-  def new_view({{id1, addr1}, account1}=src, {{id2, addr2}, account2}=dst, data) do
+  def new_view(src, dst, data) do
     {:consensus, {:new_view, src, dst, data}} # TODO: Signature!
   end
 
   @doc """
   Request lock on an account/shard for a given TX and/or other data.
   """
-  def req_lock({{id1, addr1}, account1}=src, {{id2, addr2}, account2}=dst, data) do
+  def req_lock(src, dst, data) do
     {:consensus, {:req_lock, src, dst, data}} # TODO: Signature!
   end
 
   @doc """
   Reply to a lock request.
   """
-  def ret_lock({{id1, addr1}, account1}=src, {{id2, addr2}, account2}=dst, data) do
+  def ret_lock(src, dst, data) do
     {:consensus, {:ret_lock, src, dst, data}} # TODO: Signature!
   end
 
