@@ -94,9 +94,15 @@ defmodule Crypto do
   """
   def sha256(msg) do
     :crypto.hash(:sha256, term_to_bin(msg))
+    #:crypto.hash(:sha256, Bin.to_bin(msg))
   end
 
-  defp term_to_bin(term) when is_binary(term), do: term
+  def hash(msg) do
+    bin = Bin.to_bin(msg) |> IO.iodata_to_binary()
+    :crypto.hash(:sha256, bin)
+  end
+
+  defp term_to_bin(term) when is_bitstring(term), do: term
 
   defp term_to_bin(term), do: :erlang.term_to_binary(term)
 end
