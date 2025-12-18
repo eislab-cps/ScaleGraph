@@ -13,7 +13,7 @@ defmodule ScaleGraph.Consensus.ZftLock do
   """
   use GenServer
   alias ScaleGraph.Consensus
-  alias ScaleGraph.Consensus.StaticConfig
+  alias Consensus.ShardConfig
   alias ScaleGraph.Ledger
   alias Ledger.Block
   alias Ledger.Transaction
@@ -222,7 +222,7 @@ defmodule ScaleGraph.Consensus.ZftLock do
     ledger = Keyword.fetch!(opts, :ledger)
     account = Ledger.account(ledger)
     config_lookup = Keyword.fetch!(opts, :config_lookup)
-    local_shard = StaticConfig.get(config_lookup, account.id)
+    local_shard = ShardConfig.get(config_lookup, account.id)
 
     local_ids = Enum.map(local_shard, fn {id, _addr} -> id end)
     id_to_addr = Map.new(local_shard)
@@ -297,7 +297,7 @@ defmodule ScaleGraph.Consensus.ZftLock do
         tx.rcv == state.account.id -> tx.snd
         :else -> raise "wtf!"
       end
-    remote = StaticConfig.get(state.config_lookup, account_id)
+    remote = ShardConfig.get(state.config_lookup, account_id)
     remote_ids = Enum.map(remote, fn {id, _addr} -> id end)
     id_to_addr = Map.merge(state.id_to_addr, Map.new(remote))
     %{state |

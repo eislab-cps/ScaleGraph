@@ -13,14 +13,6 @@ defmodule ScaleGraph.Consensus.StaticConfig do
     GenServer.start_link(__MODULE__, [shards: shards], opts)
   end
 
-  def add(config, account_id, nodes) do
-    GenServer.call(config, {:add_config, account_id, nodes})
-  end
-
-  def get(config, account_id) do
-    GenServer.call(config, {:get_config, account_id})
-  end
-
   @impl GenServer
   def init(opts) do
     state = Keyword.fetch!(opts, :shards)

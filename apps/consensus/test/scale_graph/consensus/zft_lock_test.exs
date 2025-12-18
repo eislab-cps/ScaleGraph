@@ -1,7 +1,7 @@
 defmodule ScaleGraph.Consensus.ZftLockTest do
   use ExUnit.Case
   alias ScaleGraph.Consensus
-  alias Consensus.StaticConfig
+  alias Consensus.ShardConfig
   alias Consensus.ZftLock
   alias ScaleGraph.Ledger
   alias Ledger.Ledgers
@@ -57,7 +57,7 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     _ledger1A = Ledgers.create(ledgers1, accountA)
     shardA = [{node2_id, node2_addr}, {node1_id, node1_addr}]
     #_shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
     {:ok, consensus1} = Consensus.start_link(node_id: node1_id, node_addr: node1_addr, ledgers: ledgers1, config_lookup: configs, netmod: Fake, net: net, protocol: ZftLock)
     tx1 = Transaction.new(accountA, accountB, 100, 0)
     Consensus.process_tx(consensus1, {tx1, nil})
@@ -82,8 +82,8 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     ledger3B = Ledgers.create(ledgers3, accountB)
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
     {:ok, consensus1} = Consensus.start_link(node_id: node1_id, node_addr: node1_addr, ledgers: ledgers1, config_lookup: configs, netmod: Fake, net: net, protocol: ZftLock)
     {:ok, _consensus2} = Consensus.start_link(node_id: node2_id, node_addr: node2_addr, ledgers: ledgers2, config_lookup: configs, netmod: Fake, net: net, protocol: ZftLock)
     {:ok, _consensus3} = Consensus.start_link(node_id: node3_id, node_addr: node3_addr, ledgers: ledgers3, config_lookup: configs, netmod: Fake, net: net, protocol: ZftLock)
@@ -109,8 +109,8 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     ledger1B = Ledgers.create(ledgers1, accountB)
     shardA = [{node1_id, node1_addr}]
     shardB = [{node1_id, node1_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
     {:ok, consensus1} = Consensus.start_link(node_id: node1_id, node_addr: node1_addr, ledgers: ledgers1, config_lookup: configs, netmod: Fake, net: net, protocol: ZftLock)
     tx1 = Transaction.new(accountA, accountB, 100, 0)
     Consensus.process_tx(consensus1, {tx1, nil})
@@ -136,8 +136,8 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     ledger1B = Ledgers.create(ledgers1, accountB)
     shardA = [{node1_id, node1_addr}]
     shardB = [{node1_id, node1_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
     {:ok, consensus1} = Consensus.start_link(node_id: node1_id, node_addr: node1_addr, ledgers: ledgers1, config_lookup: configs, netmod: Fake, net: net, protocol: ZftLock)
     # First TX
     tx1 = Transaction.new(accountA, accountB, 100, 0)
@@ -166,8 +166,8 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     ledger1B = Ledgers.create(ledgers1, accountB)
     shardA = [{node1_id, node1_addr}]
     shardB = [{node1_id, node1_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
     {:ok, consensus1} = Consensus.start_link(node_id: node1_id, node_addr: node1_addr, ledgers: ledgers1, config_lookup: configs, netmod: Fake, net: net, protocol: ZftLock)
     # Both TXs
     tx1 = Transaction.new(accountA, accountB, 100, 0)
@@ -202,8 +202,8 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     # Define shard configs
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
     # Create two transactions
     tx1 = Transaction.new(accountA, accountB, 100, 0)
     tx2 = Transaction.new(accountA, accountB, 50, 1)
@@ -250,8 +250,8 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     # Define shard configs
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}, {node3_id, node3_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}, {node4_id, node4_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
     # Create two transactions
     tx1 = Transaction.new(accountA, accountB, 100, 0)
     tx2 = Transaction.new(accountB, accountA, 50, 0)
@@ -301,9 +301,9 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
     shardC = [{node3_id, node3_addr}, {node4_id, node4_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
-    assert :ok == StaticConfig.add(configs, accountC, shardC)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountC, shardC)
     # Create two transactions
     tx1 = Transaction.new(accountA, accountB, 100, 0)
     tx2 = Transaction.new(accountB, accountA, 50, 0)
@@ -355,9 +355,9 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
     shardC = [{node3_id, node3_addr}, {node4_id, node4_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
-    assert :ok == StaticConfig.add(configs, accountC, shardC)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountC, shardC)
     # Create two transactions
     tx1 = Transaction.new(accountA, accountB, 100, 0)
     tx2 = Transaction.new(accountA, accountC, 150, 1)
@@ -418,9 +418,9 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
     shardC = [{node3_id, node3_addr}, {node4_id, node4_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
-    assert :ok == StaticConfig.add(configs, accountC, shardC)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountC, shardC)
     # Create two transactions
     tx1 = Transaction.new(accountB, accountA, 100, 0)
     tx2 = Transaction.new(accountC, accountA, 150, 0)
@@ -481,9 +481,9 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
     shardC = [{node3_id, node3_addr}, {node4_id, node4_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
-    assert :ok == StaticConfig.add(configs, accountC, shardC)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountC, shardC)
     # Create two transactions
     tx1 = Transaction.new(accountA, accountB, 100, 3)
     tx2 = Transaction.new(accountA, accountC, 150, 2)
@@ -544,9 +544,9 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
     shardC = [{node3_id, node3_addr}, {node4_id, node4_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
-    assert :ok == StaticConfig.add(configs, accountC, shardC)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountC, shardC)
     # Create two transactions
     tx1 = Transaction.new(accountB, accountA, 100, 1)
     tx2 = Transaction.new(accountC, accountA, 150, 0)
@@ -599,8 +599,8 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     # Define shard configs
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
     # Create two transactions
     tx0 = Transaction.new(accountA, accountB, @start_balance+1, 0)  # ignored
     tx1 = Transaction.new(accountA, accountB, @start_balance-1, 0)  # A=1     B=1999
@@ -643,8 +643,8 @@ defmodule ScaleGraph.Consensus.ZftLockTest do
     # Define shard configs
     shardA = [{node1_id, node1_addr}, {node2_id, node2_addr}]
     shardB = [{node2_id, node2_addr}, {node3_id, node3_addr}]
-    assert :ok == StaticConfig.add(configs, accountA, shardA)
-    assert :ok == StaticConfig.add(configs, accountB, shardB)
+    assert :ok == ShardConfig.add(configs, accountA, shardA)
+    assert :ok == ShardConfig.add(configs, accountB, shardB)
     # Create two transactions
     tx0 = Transaction.new(accountA, accountB, @start_balance+1, 0)    # ignored
     tx1 = Transaction.new(accountA, accountB, @start_balance-1, 0)    # A=1     B=1999

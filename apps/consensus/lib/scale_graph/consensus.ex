@@ -255,7 +255,7 @@ defmodule ScaleGraph.Consensus do
             {:ok, ledger} ->
               ledger
             _else ->
-              raise "Consensus #{abbrev(node_id)}: failed to look up instance #{abbrev(account)}"
+              Ledgers.create(state.ledgers, account)
           end
         opts = [
           node_id: node_id,

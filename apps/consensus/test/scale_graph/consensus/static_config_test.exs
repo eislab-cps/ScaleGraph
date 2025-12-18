@@ -1,5 +1,6 @@
 defmodule ScaleGraph.Consensus.StaticConfigTest do
   use ExUnit.Case
+  alias ScaleGraph.Consensus.ShardConfig
   alias ScaleGraph.Consensus.StaticConfig
 
   test "moop" do
@@ -11,10 +12,10 @@ defmodule ScaleGraph.Consensus.StaticConfigTest do
     {:ok, config} = StaticConfig.start_link([])
     shardA = [nodeID1, nodeID2]
     shardB = [nodeID2, nodeID3]
-    assert :ok == StaticConfig.add(config, accountA, shardA)
-    assert :ok == StaticConfig.add(config, accountB, shardB)
-    assert StaticConfig.get(config, accountA) == shardA
-    assert StaticConfig.get(config, accountB) == shardB
+    assert :ok == ShardConfig.add(config, accountA, shardA)
+    assert :ok == ShardConfig.add(config, accountB, shardB)
+    assert ShardConfig.get(config, accountA) == shardA
+    assert ShardConfig.get(config, accountB) == shardB
   end
 
 end
